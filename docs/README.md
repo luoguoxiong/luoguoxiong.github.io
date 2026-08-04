@@ -1,5 +1,9 @@
 # 目录
 
+AI 专栏
+
+[让 Agent 拥有长期记忆：agentpack-memory 设计与实现](ai/agentpack-memory.md '让 Agent 拥有长期记忆')、[BM25 检索算法详解：从原理到零依赖实现](ai/bm25.md 'BM25 检索算法详解')
+
 随笔
 
 [状态管理的那些事](note/state.md '状态管理的那些事')、[热更新原理](note/hmr.md '热更新原理')、 [回收机制](note/gc.md '回收机制')、[requestIdleCallback实现](note/requestIdleCallback.md 'requestIdleCallback实现')、[typeScript 不常用的一些技巧](note/ts.md 'typeScript 不常用的一些技巧')、[webpack按需加载原理](note/import.md 'webpack按需加载原理')
