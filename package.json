@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/Peroluo/blog/issues"
   },
-  "homepage": "https://github.com/Peroluo/blog#readme"
+  "homepage": "https://github.com/Peroluo/blog#readme",
+  "dependencies": {
+    "docsify": "^5.0.0",
+    "docsify-cli": "^5.0.0"
+  }
 }
