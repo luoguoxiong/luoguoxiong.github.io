@@ -2,6 +2,7 @@
 
 -   [目录](/ '目录')
 -   AI 专栏
+    -   [Agent 架构设计有哪些](ai/agent-architecture.md 'Agent 架构设计有哪些')
     -   [让 Agent 拥有长期记忆](ai/agentpack-memory.md '让 Agent 拥有长期记忆')
     -   [BM25 检索算法详解](ai/bm25.md 'BM25 检索算法详解')
 -   随笔
