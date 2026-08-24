@@ -33,6 +33,9 @@
 - [让 Agent 拥有长期记忆：agentpack-memory 设计与实现](ai/agentpack-memory.md '让 Agent 拥有长期记忆')
   - 从零实现 Agent 记忆系统：向量存储、混合检索、记忆压缩
 
+- [Agent 工程化部署实践：从能跑到上线的全链路指南](ai/agent-deployment.md 'Agent 工程化部署实践')
+  - 成本控制、限流隔离、可观测性、灰度发布、弹性设计与安全护栏
+
 - [BM25 检索算法详解：从原理到零依赖实现](ai/bm25.md 'BM25 检索算法详解')
   - 用不到 150 行代码实现完整的 BM25 倒排索引
 
@@ -64,7 +67,7 @@
 
 | 分类 | 篇数 | 简介 |
 |------|------|------|
-| [AI 专栏](#/ai/rag 'AI 专栏') | 5 | RAG、Agent 架构、记忆系统、BM25 检索 |
+| [AI 专栏](#/ai/rag 'AI 专栏') | 6 | RAG、Agent 架构、记忆系统、工程化部署、BM25 检索 |
 | [React](#/react/fiber 'React') | 12 | 源码分析、Fiber、Hooks、性能优化 |
 | [前端工程](#/engineering/vite '前端工程') | 13 | Webpack/Vite/Babel、部署、规范、微前端 |
 | [性能优化](#/performance/quota '性能优化') | 8 | 指标体系、采集、首屏、渲染、网络 |

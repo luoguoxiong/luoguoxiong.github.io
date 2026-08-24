@@ -6,6 +6,7 @@
     -   [Agent Runtime 设计深度解析](ai/agent-runtime-design.md 'Agent Runtime 设计深度解析')
     -   [Agent 架构设计有哪些](ai/agent-architecture.md 'Agent 架构设计有哪些')
     -   [让 Agent 拥有长期记忆](ai/agentpack-memory.md '让 Agent 拥有长期记忆')
+    -   [Agent 工程化部署实践](ai/agent-deployment.md 'Agent 工程化部署实践')
     -   [BM25 检索算法详解](ai/bm25.md 'BM25 检索算法详解')
     -   [RAG 检索增强生成](ai/rag.md 'RAG 检索增强生成')
 -   随笔
