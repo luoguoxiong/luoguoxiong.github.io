@@ -6,6 +6,7 @@
     -   [Agent 架构设计有哪些](ai/agent-architecture.md 'Agent 架构设计有哪些')
     -   [让 Agent 拥有长期记忆](ai/agentpack-memory.md '让 Agent 拥有长期记忆')
     -   [BM25 检索算法详解](ai/bm25.md 'BM25 检索算法详解')
+    -   [RAG 检索增强生成](ai/rag.md 'RAG 检索增强生成')
 -   随笔
     -   [状态管理的那些事](note/state.md '状态管理的那些事')
     -   [热更新原理](note/hmr.md '热更新原理')
