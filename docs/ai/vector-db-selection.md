@@ -455,143 +455,130 @@ pgvector 很方便，但它不是银弹。
 
 ```mermaid
 flowchart TD
-    A([🎯 开始向量库选型]) --> B{部署形态？};
+    A([开始选型]) --> B{部署形态?}
 
-    %% 三选一入口
-    B -->|纯托管 SaaS| C1{合规 & 地区？};
-    B -->|私有化自建| D1[进入自建流程 ↓];
-    B -->|嵌入式 / 本地库| E1{用途？};
+    B -->|纯托管 SaaS| C1{合规和地区?}
+    B -->|私有化自建| D1[进入自建流程]
+    B -->|嵌入式/本地库| E1{用途?}
 
     %% ===== 分支 A：托管 SaaS =====
-    C1 -->|数据可出境 + 海外节点| C2[Pinecone / Weaviate Cloud];
-    C1 -->|数据极敏感 / 中国大陆无节点| C3[❌ 放弃托管，走自建分支];
+    C1 -->|数据可出境 + 海外节点| C2[Pinecone / Weaviate Cloud]
+    C1 -->|极敏感/中国大陆无节点| C3[转自建分支]
 
     %% ===== 分支 B：私有化自建 =====
-    D1 --> D2{数据量级？};
-    D2 -->|< 100 万| D3{已有 PostgreSQL？};
-    D2 -->|100 万 ~ 1 亿| D4{过滤需求重吗？};
-    D2 -->|> 1 亿| D5[Milvus 集群<br/>+ DiskANN 冷热分层];
+    D1 --> D2{数据量级?}
+    D2 -->|100万以内| D3{已有PostgreSQL?}
+    D2 -->|100万至1亿| D4{过滤需求重吗?}
+    D2 -->|1亿以上| D5[Milvus集群\nDiskANN冷热分层]
 
-    D3 -->|有| D3a[pgvector ✅<br/>不新增任何组件];
-    D3 -->|无| D3b{要快速 Demo？};
-    D3b -->|是| D3b1[Chroma ✅<br/>5 分钟跑通];
-    D3b -->|否| D3b2[Qdrant ✅<br/>单机 Docker 即用];
+    D3 -->|有| D3a[pgvector \n不新增任何组件]
+    D3 -->|无| D3b{要快速Demo?}
+    D3b -->|是| D3b1[Chroma \n5分钟跑通]
+    D3b -->|否| D3b2[Qdrant \n单机Docker即用]
 
-    D4 -->|重(属性/分类/时间)<br/>多条件组合过滤| D4a[Qdrant ✅<br/>原生 HNSW+Payload 过滤];
-    D4 -->|一般| D4b{团队能运维 K8s/集群吗？};
-    D4b -->|能| D4b1[Milvus / Qdrant 集群];
-    D4b -->|单机/Docker 即可| D4b2[Qdrant 单机 ✅<br/>或 pgvector 继续扛];
+    D4 -->|重过滤\n属性/分类/时间| D4a[Qdrant \n原生HNSW+过滤]
+    D4 -->|一般| D4b{团队能运维K8s/集群吗?}
+    D4b -->|能| D4b1[Milvus/Qdrant集群]
+    D4b -->|单机/Docker即可| D4b2[Qdrant单机 \n或pgvector继续扛]
 
-    %% ===== 分支 C：嵌入式 / 本地 =====
-    E1 -->|Demo / 原型 / 小项目| E2[Chroma ✅<br/>Python 内嵌零依赖];
-    E1 -->|嵌入业务系统 + 性能优先| E3{需要 GPU 加速吗？};
-    E3 -->|需要(图像/多模态)| E3a[FAISS(GPU) ✅<br/>性能天花板];
-    E3 -->|不需要| E3b[FAISS ✅<br/>自研服务层封装];
+    %% ===== 分支 C：嵌入式/本地 =====
+    E1 -->|Demo/原型/小项目| E2[Chroma \nPython内嵌零依赖]
+    E1 -->|嵌入业务系统+性能优先| E3{需要GPU加速?}
+    E3 -->|需要(图像/多模态)| E3a[FAISS(GPU) \n性能天花板]
+    E3 -->|不需要| E3b[FAISS \n自研服务层封装]
 
     %% 最终收敛
-    C2 --> Z([🎉 完成选型]);
-    C3 --> D1;
-    D3a --> Z;
-    D3b1 --> Z;
-    D3b2 --> Z;
-    D4a --> Z;
-    D4b1 --> Z;
-    D4b2 --> Z;
-    D5 --> Z;
-    E2 --> Z;
-    E3a --> Z;
-    E3b --> Z;
+    C2 --> Z([完成选型])
+    C3 --> D1
+    D3a --> Z
+    D3b1 --> Z
+    D3b2 --> Z
+    D4a --> Z
+    D4b1 --> Z
+    D4b2 --> Z
+    D5 --> Z
+    E2 --> Z
+    E3a --> Z
+    E3b --> Z
 ```
 
 ### 7.2 私有化自建细化流程（80% 场景走这里）
 
 ```mermaid
 flowchart TD
-    S([🔧 私有化自建流程]) --> A{向量规模？};
+    S([私有化自建流程]) --> A{向量规模?}
 
-    %% ===== 第一层：量级 =====
-    A -->|≤ 500 万| B{已有 PG？};
-    A -->|500 万 ~ 5000 万| C{过滤权重？};
-    A -->|5000 万 ~ 1 亿| D{能运维集群吗？};
-    A -->|> 1 亿| E[Milvus Cluster<br/>DiskANN 冷热分层 ✅];
+    A -->|500万以内| B{已有PG?}
+    A -->|500万至5000万| C{过滤权重?}
+    A -->|5000万至1亿| D{能运维集群吗?}
+    A -->|1亿以上| E[Milvus Cluster\nDiskANN冷热分层]
 
-    %% ===== ≤ 500 万 =====
-    B -->|有| B1[pgvector ✅<br/>表 Join / 备份 / 监控复用];
-    B -->|无| B2{预算&团队？};
-    B2 -->|极简 / 原型| B2a[Chroma ✅];
-    B2 -->|想长期稳定 / Docker| B2b[Qdrant 单机 ✅<br/>Rust 单 binary];
+    B -->|有| B1[pgvector\n表Join/备份/监控复用]
+    B -->|无| B2{预算和团队?}
+    B2 -->|极简/原型| B2a[Chroma]
+    B2 -->|长期稳定/Docker| B2b[Qdrant单机\nRust单binary]
 
-    %% ===== 500万~5000万 =====
-    C -->|⚡重过滤(电商/法律/文档)| C1[Qdrant ✅<br/>HNSW 内置 payload 索引];
-    C -->|一般过滤| C2{已有技术栈？};
-    C2 -->|熟悉 Go / K8s| C2a[Milvus 单机 ✅<br/>功能最全];
-    C2 -->|熟悉 Rust / 轻量| C2b[Qdrant 单机 ✅<br/>资源占用低];
-    C2 -->|PG 老用户| C2c[pgvector<br/>观察内存与延迟];
+    C -->|重过滤 电商/法律/文档| C1[Qdrant\nHNSW内置payload索引]
+    C -->|一般过滤| C2{已有技术栈?}
+    C2 -->|熟悉Go/K8s| C2a[Milvus单机\n功能最全]
+    C2 -->|熟悉Rust/轻量| C2b[Qdrant单机\n资源占用低]
+    C2 -->|PG老用户| C2c[pgvector\n观察内存与延迟]
 
-    %% ===== 5000万~1亿 =====
-    D -->|能运维 K8s 集群| D1[Milvus Operator ✅<br/>分片 + 副本 + S3 存储];
-    D -->|不想运维| D2{多台裸机/ECS？};
-    D2 -->|有 2~3 台机器| D2a[Qdrant 集群 ✅<br/>Raft 分片 + 副本];
-    D2 -->|只有单机| D2b[⚠️ Qdrant + 大内存<br/>或上 Milvus DiskANN];
+    D -->|能运维K8s集群| D1[Milvus Operator\n分片+副本+S3存储]
+    D -->|不想运维| D2{多台裸机或ECS?}
+    D2 -->|有2至3台机器| D2a[Qdrant集群\nRaft分片+副本]
+    D2 -->|只有单机| D2b[Qdrant加大内存\n或上Milvus DiskANN]
 
-    %% 附加判断：GPU / 混合检索
-    subgraph X [📌 特殊需求补充判断（任一满足即调优）]
-        direction LR
-        X1{需要 GPU 加速？<br/>(图像/多模态)} -->|是| X1a[FAISS(GPU) / Milvus GPU 索引];
-        X2{需要 BM25 + 向量混合检索？} -->|是| X2a[Qdrant(稀疏向量)<br/>或 Milvus(BM25)];
-        X3{多租户 SaaS 隔离？} -->|是| X3a[Qdrant 多集合<br/>或 Pinecone 命名空间];
-    end
-
-    B1 --> END([✅ 完成]);
-    B2a --> END;
-    B2b --> END;
-    C1 --> END;
-    C2a --> END;
-    C2b --> END;
-    C2c --> END;
-    D1 --> END;
-    D2a --> END;
-    D2b --> END;
-    E --> END;
-
-    END --- X;
+    B1 --> END([完成])
+    B2a --> END
+    B2b --> END
+    C1 --> END
+    C2a --> END
+    C2b --> END
+    C2c --> END
+    D1 --> END
+    D2a --> END
+    D2b --> END
+    E --> END
 ```
+
+> **📌 特殊需求补充**（任一满足即额外调优）：
+> - 需要 **GPU 加速**（图像/多模态）→ FAISS(GPU) 或 Milvus GPU 索引
+> - 需要 **BM25 + 向量混合检索** → Qdrant（稀疏向量）或 Milvus（BM25）
+> - 多租户 SaaS 隔离 → Qdrant（多集合）或 Pinecone（命名空间）
 
 ### 7.3 托管 SaaS 细化流程
 
 ```mermaid
 flowchart TD
-    S([☁️ 托管 SaaS 流程]) --> A{数据可以出境吗？};
+    S([托管SaaS流程]) --> A{数据可以出境吗?}
 
-    A -->|❌ 不可以（合规/极敏）| A_FAIL[⛔ 放弃托管<br/>转私有化自建分支];
-    A -->|✅ 可以| B{所在地区？};
+    A -->|不可以 合规/极敏| A_FAIL[放弃托管\n转私有化自建分支]
+    A -->|可以| B{所在地区?}
 
-    B -->|中国大陆| B_FAIL[⛔ Pinecone 无节点<br/>转 Qdrant / Milvus 自建];
-    B -->|AWS / GCP / Azure 海外| C{预算充足吗？};
+    B -->|中国大陆| B_FAIL[Pinecone无节点\n转Qdrant或Milvus自建]
+    B -->|AWS/GCP/Azure海外| C{预算充足吗?}
 
-    C -->|月预算 < $200| C_L[💡 轻量方案：<br/>Weaviate Free Tier<br/>或自建 Qdrant];
-    C -->|月预算 ≥ $200| D{需求？};
+    C -->|月预算 200美元以内| C_L[轻量方案:\nWeaviate Free Tier\n或自建Qdrant]
+    C -->|月预算 200美元以上| D{需求?}
 
-    D -->|只要纯向量 + 弹性| D1[Pinecone ✅<br/>S3 存储 + 性能稳定];
-    D -->|要内置向量化 / LLM<br/>不想多组件组装| D2[Weaviate Cloud ✅<br/>text2vec + generative 模块];
-    D -->|团队已有 Atlas| D3[MongoDB Atlas Vector Search<br/>省一份运维];
+    D -->|只要纯向量+弹性| D1[Pinecone\nS3存储+性能稳定]
+    D -->|要内置向量化和LLM| D2[Weaviate Cloud\ntext2vec+generative模块]
+    D -->|团队已有Atlas| D3[MongoDB Atlas Vector Search\n省一份运维]
 
-    subgraph Note [⚠️ 托管选型注意事项]
-        direction TB
-        N1["🔒 隐私条款（GDPR/HIPAA/等保）"]
-        N2["🌐 实测延迟（中国→海外 300ms+ 常见）"]
-        N3["💰 按 Pod 计费要估算峰值费用"]
-        N4["🔄 出口锁定：向量迁移数据成本"]
-    end
-
-    A_FAIL --> END;
-    B_FAIL --> END;
-    C_L --> END;
-    D1 --> END;
-    D2 --> END;
-    D3 --> END;
-    END --- Note;
+    A_FAIL --> END([完成])
+    B_FAIL --> END
+    C_L --> END
+    D1 --> END
+    D2 --> END
+    D3 --> END
 ```
+
+> **⚠️ 托管选型注意**：
+> - **隐私条款**（GDPR/HIPAA/等保）：务必与供应商确认数据存储地域
+> - **实测延迟**：中国大陆访问海外节点，300ms 以上很常见
+> - **峰值费用**：按 Pod 计费要压测峰值，避免月底账单爆炸
+> - **出口锁定**：Pinecone 无数据导出 API，迁移成本极高
 
 ### 7.4 速查手册：30 秒定结论
 
