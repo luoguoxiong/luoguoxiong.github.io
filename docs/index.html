@@ -16,33 +16,137 @@
 </style>
 <body>
   <div id="app"></div>
+
+  <!-- ============================================================
+       第一步：配置 docsify + 预注册 plugin（必须在 docsify.js 加载之前）
+       ============================================================ -->
   <script>
+    // Mermaid 渲染逻辑（mermaid 库虽然后加载，但闭包里的函数在 render 调用时才真正执行，所以没问题）
+    (function () {
+      var inited = false;
+      function ensureInit() {
+        if (inited) return true;
+        if (typeof mermaid === 'undefined') return false;
+        try {
+          mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose',
+            fontFamily: 'system-ui,-apple-system,sans-serif',
+            flowchart: { curve: 'basis', htmlLabels: false, useMaxWidth: true, padding: 12 }
+          });
+          inited = true;
+          return true;
+        } catch (e) {
+          console.error('[mermaid] init error:', e);
+          return false;
+        }
+      }
+
+      function showError(node, msg, src) {
+        var pre = document.createElement('pre');
+        pre.style.cssText = 'background:#fff1f0;color:#cf1322;border:1px solid #ffa39e;padding:12px;border-radius:4px;white-space:pre-wrap;font-size:13px;';
+        pre.textContent = '❌ ' + msg + '\n\n--- Mermaid 源码 ---\n' + src;
+        var p = node.parentNode;   // <code> -> <pre>
+        if (p && p.parentNode) p.parentNode.replaceChild(pre, p);
+        console.error('[mermaid]', msg);
+      }
+
+      function renderOne(node, idx) {
+        // 关键：textContent 会自动把 &gt; &lt; &amp; 解回 > < &
+        var src = (node.textContent || node.innerText || '').replace(/\r\n?/g, '\n').trim();
+        if (!src) return;
+        if (typeof mermaid === 'undefined') {
+          // mermaid 还没加载（理论上同步顺序不会，但防一手）
+          setTimeout(function () { renderOne(node, idx); }, 200);
+          return;
+        }
+        if (!ensureInit()) return;
+        var id = 'mermaid-' + Date.now().toString(36) + '-' + idx;
+        try {
+          var ret = mermaid.render(id, src);
+          Promise.resolve(ret).then(function (r) {
+            var svg = (r && r.svg) ? r.svg : (typeof r === 'string' ? r : '');
+            if (!svg) throw new Error('render 返回空 svg');
+            var wrap = document.createElement('div');
+            wrap.className = 'mermaid-rendered';
+            wrap.style.cssText = 'overflow-x:auto;padding:8px 0;';
+            wrap.innerHTML = svg;
+            var p = node.parentNode;
+            if (p && p.parentNode) p.parentNode.replaceChild(wrap, p);
+          }).catch(function (err) {
+            showError(node, 'Mermaid 渲染失败: ' + (err && err.message ? err.message : String(err)), src);
+          });
+        } catch (err) {
+          showError(node, 'Mermaid 渲染异常: ' + (err && err.message ? err.message : String(err)), src);
+        }
+      }
+
+      // 暴露给 $docsify.plugins 用
+      // 注：docsify 给 ```mermaid 代码块生成的 class 是 lang-mermaid（不是 language-mermaid），两者都兼容
+      window.__mermaidRenderAll = function () {
+        var nodes = document.querySelectorAll('code.lang-mermaid, code[class*="language-mermaid"]');
+        for (var i = 0; i < nodes.length; i++) renderOne(nodes[i], i);
+      };
+    })();
+
+    // ===== docsify 配置（docsify.js 加载时会同步读取 $docsify.plugins，所以必须写在前面）=====
+    // 说明：$docsify 必须是这个窗口里的第一次赋值，否则 docsify 可能读旧对象
+    var mermaidPlugin = function (hook, vm) {
+      // 每个 hook 都触发一遍，确保不漏（doneEach/mounted/doneAny）
+      function trigger() {
+        if (window.__mermaidRenderAll) {
+          // 延迟一帧,等 docsify 把 md 渲染成 DOM
+          setTimeout(window.__mermaidRenderAll, 0);
+          setTimeout(window.__mermaidRenderAll, 300);
+          setTimeout(window.__mermaidRenderAll, 1000);
+        }
+      }
+      hook.init(function () { trigger(); });
+      hook.beforeEach(function () { /* 页面 HTML 还没生成,不管 */ });
+      hook.afterEach(function (html) { return html; });
+      hook.doneEach(function () { trigger(); });
+      hook.mounted(function () { trigger(); });
+      hook.ready(function () { trigger(); });
+    };
+
+    // 额外兜底：如果 hook 没触发（docsify SPA 冷启动时偶发）,用 MutationObserver 扫
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.__mermaidRenderAll) setTimeout(window.__mermaidRenderAll, 800);
+      var timer = null;
+      var mo = new MutationObserver(function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          if (window.__mermaidRenderAll) window.__mermaidRenderAll();
+        }, 400);
+      });
+      try { mo.observe(document.body || document.documentElement, { childList: true, subtree: true }); } catch (e) {}
+    });
+
     window.$docsify = {
       logo: 'https://avatars.githubusercontent.com/u/26996446?v=4',
       name: 'luoguoxiong',
-      sidebarDisplayLevel: 0, // set sidebar display level
+      sidebarDisplayLevel: 0,
       repo: 'https://github.com/luoguoxiong',
       loadSidebar: true,
-    }
+      plugins: [mermaidPlugin]
+    };
   </script>
+
+  <!-- ============================================================
+       第二步：加载 mermaid（必须在 docsify 之前或同阶段完成，doneEach 调用时它肯定在）
+       ============================================================ -->
+  <script src="//cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+
+  <!-- ============================================================
+       第三步：加载 docsify + 官方插件（最后加载）
+       ============================================================ -->
   <!-- Docsify v4 -->
   <script src="//unpkg.com/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
-  <!-- Mermaid 流程图支持 -->
-  <script src="//cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script>
-    window.$docsify = window.$docsify || {};
-    window.$docsify.mermaidConfig = {
-      startOnLoad: false,
-      theme: 'default',
-      securityLevel: 'loose',
-      flowchart: { curve: 'basis', htmlLabels: false, useMaxWidth: true }
-    };
-  </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@2/dist/docsify-mermaid.min.js"></script>
   <!-- <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script> -->
 </body>
 </html>
