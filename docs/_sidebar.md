@@ -2,6 +2,7 @@
 
 -   [目录](/ '目录')
 -   AI 专栏
+    -   [可观测性服务设计深度解析](ai/observability-server-design.md '可观测性服务设计深度解析')
     -   [Agent 评测体系深度解析](ai/agent-evaluation.md 'Agent 评测体系深度解析')
     -   [Agent Runtime 设计深度解析](ai/agent-runtime-design.md 'Agent Runtime 设计深度解析')
     -   [Agent 架构设计有哪些](ai/agent-architecture.md 'Agent 架构设计有哪些')
