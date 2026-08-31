@@ -27,6 +27,9 @@
 - [RAG 检索增强生成：从原理到工程实践](ai/rag.md 'RAG 检索增强生成')
   - 从数据清洗到重排序，完整梳理 RAG 落地的每个环节
 
+- [RAG 性能指标与优化实践：从度量到提升的全链路指南](ai/rag-performance.md 'RAG 性能指标与优化实践')
+  - 结合 learn-rag 项目，系统讲解 RAG 性能指标体系与各阶段优化策略
+
 - [Agent 架构设计有哪些：从单智能体到多智能体编排](ai/agent-architecture.md 'Agent 架构设计有哪些')
   - 系统梳理 ReAct、Plan-and-Execute、多 Agent、图结构等主流架构
 
@@ -67,7 +70,7 @@
 
 | 分类 | 篇数 | 简介 |
 |------|------|------|
-| [AI 专栏](#/ai/rag 'AI 专栏') | 6 | RAG、Agent 架构、记忆系统、工程化部署、BM25 检索 |
+| [AI 专栏](#/ai/rag 'AI 专栏') | 7 | RAG、RAG 性能优化、Agent 架构、记忆系统、工程化部署、BM25 检索 |
 | [React](#/react/fiber 'React') | 12 | 源码分析、Fiber、Hooks、性能优化 |
 | [前端工程](#/engineering/vite '前端工程') | 13 | Webpack/Vite/Babel、部署、规范、微前端 |
 | [性能优化](#/performance/quota '性能优化') | 8 | 指标体系、采集、首屏、渲染、网络 |
