@@ -11,6 +11,7 @@
     -   [BM25 检索算法详解](ai/bm25.md 'BM25 检索算法详解')
     -   [RAG 检索增强生成](ai/rag.md 'RAG 检索增强生成')
     -   [RAG 性能指标与优化实践](ai/rag-performance.md 'RAG 性能指标与优化实践')
+    -   [如何提高 RAG 性能指标](ai/如何提高RAG性能指标.md '如何提高 RAG 性能指标')
     -   [RAG 向量库选型多维度对比](ai/vector-db-selection.md 'RAG 向量库选型多维度对比')
 -   随笔
     -   [状态管理的那些事](note/state.md '状态管理的那些事')
