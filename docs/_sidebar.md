@@ -1,6 +1,7 @@
 <!-- docs/_sidebar.md -->
 
 -   [目录](/ '目录')
+-   [博客首页](/ '博客首页')
 -   AI 专栏
     -   [可观测性服务设计深度解析](ai/observability-server-design.md '可观测性服务设计深度解析')
     -   [Agent 评测体系深度解析](ai/agent-evaluation.md 'Agent 评测体系深度解析')
@@ -10,6 +11,7 @@
     -   [Agent 工程化部署实践](ai/agent-deployment.md 'Agent 工程化部署实践')
     -   [BM25 检索算法详解](ai/bm25.md 'BM25 检索算法详解')
     -   [RAG 检索增强生成](ai/rag.md 'RAG 检索增强生成')
+    -   [RAG 文档变更设计：增删改](ai/rag-doc-sync.md 'RAG 知识库文档变更设计')
     -   [RAG 性能指标与优化实践](ai/rag-performance.md 'RAG 性能指标与优化实践')
     -   [如何提高 RAG 性能指标](ai/如何提高RAG性能指标.md '如何提高 RAG 性能指标')
     -   [RAG 向量库选型多维度对比](ai/vector-db-selection.md 'RAG 向量库选型多维度对比')
