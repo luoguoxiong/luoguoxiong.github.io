@@ -13,6 +13,7 @@
     -   [RAG 检索增强生成](ai/rag.md 'RAG 检索增强生成')
     -   [RAG 文档变更设计：增删改](ai/rag-doc-sync.md 'RAG 知识库文档变更设计')
     -   [RAG 性能指标与优化实践](ai/rag-performance.md 'RAG 性能指标与优化实践')
+    -   [RAG 指标异常排查指南](ai/rag-metrics-troubleshooting.md 'RAG 指标异常排查指南')
     -   [如何提高 RAG 性能指标](ai/如何提高RAG性能指标.md '如何提高 RAG 性能指标')
     -   [RAG 向量库选型多维度对比](ai/vector-db-selection.md 'RAG 向量库选型多维度对比')
 -   随笔
